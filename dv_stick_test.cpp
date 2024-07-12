@@ -52,6 +52,7 @@ int main() {
   //sleep_ms(5000);
 
   DVDisplay display;
+  display.preinit();
   display.init(DISPLAY_WIDTH, DISPLAY_HEIGHT, DVDisplay::MODE_RGB888, FRAME_WIDTH, FRAME_HEIGHT);
   //display.test();
 

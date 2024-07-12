@@ -72,6 +72,7 @@ int main() {
   //sleep_ms(5000);
 
   DVDisplay display;
+  display.preinit();
 #if USE_PALETTE
   display.init(DISPLAY_WIDTH, DISPLAY_HEIGHT, DVDisplay::MODE_PALETTE, FRAME_WIDTH, FRAME_HEIGHT);
   PicoGraphics_PenDV_P5 graphics(FRAME_WIDTH, FRAME_HEIGHT, display);

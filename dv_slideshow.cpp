@@ -126,6 +126,7 @@ int main() {
 
   sleep_ms(5000);
 
+  display.preinit();
   display.init(FRAME_WIDTH, FRAME_HEIGHT, DVDisplay::MODE_RGB888);
   //display.test();
 
