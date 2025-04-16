@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             name: Linux
             cache-key: linux
             cmake-args: '-DPIMORONI_PICOVISION_PATH=$GITHUB_WORKSPACE/picovision -DPIMORONI_PICO_PATH=$GITHUB_WORKSPACE/pimoroni-pico -DPICO_SDK_PATH=$GITHUB_WORKSPACE/pico-sdk -DCMAKE_INSTALL_PREFIX=$GITHUB_WORKSPACE/install'
@@ -31,27 +31,27 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         path: project
 
     # Checkout the Pimoroni Pico Libraries
     - name: Checkout Pimoroni Pico Libraries
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: pimoroni/pimoroni-pico
         path: pimoroni-pico
 
     # Checkout the Pimoroni PicoVision Libraries
     - name: Checkout Pimoroni PicoVision Libraries
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: pimoroni/picovision
         path: picovision
 
     # Checkout the Pico SDK
     - name: Checkout Pico SDK
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         repository: raspberrypi/pico-sdk
         path: pico-sdk
@@ -85,23 +85,13 @@ jobs:
         cmake --build . --config $BUILD_TYPE --target package -j 2
 
     - name: Upload .zip
-      if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      if: github.event_name == 'release' && matrix.release-suffix != ''
+      uses: softprops/action-gh-release@v1
       with:
-        asset_path: ${{runner.workspace}}/build/${{env.RELEASE_FILE}}.zip
-        upload_url: ${{github.event.release.upload_url}}
-        asset_name: ${{env.RELEASE_FILE}}.zip
-        asset_content_type: application/zip
+        files: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.zip
 
     - name: Upload .tar.gz
-      if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      if: github.event_name == 'release' && matrix.release-suffix != ''
+      uses: softprops/action-gh-release@v1
       with:
-        asset_path: ${{runner.workspace}}/build/${{env.RELEASE_FILE}}.tar.gz
-        upload_url: ${{github.event.release.upload_url}}
-        asset_name: ${{env.RELEASE_FILE}}.tar.gz
-        asset_content_type: application/octet-stream
+        files: ${{runner.workspace}}/main/build/${{env.RELEASE_FILE}}.tar.gz
